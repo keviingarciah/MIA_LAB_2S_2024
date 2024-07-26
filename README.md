@@ -7,5 +7,5 @@ Repositorio para el apoyo de los estudiantes durante el laboratorio 😄.
 ### Contenido
 
 <ul>
-    <li> 👉 <a href="https://github.com/keviingarciah/MIA_LAB_S2_2024/CLASE01" target="_blank">CLASE 01</a></li>
+    <li> 👉 <a href="https://github.com/keviingarciah/MIA_LAB_S2_2024/tree/main/CLASE01" target="_blank">CLASE 01</a></li>
 </ul>
