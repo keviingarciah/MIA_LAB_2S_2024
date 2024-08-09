@@ -26,13 +26,13 @@ func Analyzer(input string) (interface{}, error) {
 		return commands.ParserMkdisk(tokens[1:])
 	case "rmdisk":
 		// Llama a la función CommandRmdisk del paquete commands con los argumentos restantes
-		return commands.CommandRmdisk(tokens[1:])
+		return commands.ParserRmdisk(tokens[1:])
 	case "fdisk":
 		// Llama a la función CommandFdisk del paquete commands con los argumentos restantes
-		return commands.CommandFdisk(tokens[1:])
+		return commands.ParserFdisk(tokens[1:])
 	case "mount":
 		// Llama a la función CommandMount del paquete commands con los argumentos restantes
-		return commands.CommandMount(tokens[1:])
+		return commands.ParserMount(tokens[1:])
 	case "clear":
 		// Crea un comando para limpiar la terminal
 		cmd := exec.Command("clear")

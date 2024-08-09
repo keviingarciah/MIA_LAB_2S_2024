@@ -2,11 +2,12 @@ package commands
 
 import (
 	structures "CLASE03/structures" // Importa el paquete "structures" desde el directorio "EDD2021/structures"
-	"errors"                        // Paquete para manejar errores y crear nuevos errores con mensajes personalizados
-	"fmt"                           // Paquete para formatear cadenas y realizar operaciones de entrada/salida
-	"regexp"                        // Paquete para trabajar con expresiones regulares, útil para encontrar y manipular patrones en cadenas
-	"strconv"                       // Paquete para convertir cadenas a otros tipos de datos, como enteros
-	"strings"                       // Paquete para manipular cadenas, como unir, dividir, y modificar contenido de cadenas
+	utils "CLASE03/utils"
+	"errors"  // Paquete para manejar errores y crear nuevos errores con mensajes personalizados
+	"fmt"     // Paquete para formatear cadenas y realizar operaciones de entrada/salida
+	"regexp"  // Paquete para trabajar con expresiones regulares, útil para encontrar y manipular patrones en cadenas
+	"strconv" // Paquete para convertir cadenas a otros tipos de datos, como enteros
+	"strings" // Paquete para manipular cadenas, como unir, dividir, y modificar contenido de cadenas
 )
 
 // FDISK estructura que representa el comando fdisk con sus parámetros
@@ -26,7 +27,7 @@ type FDISK struct {
 */
 
 // CommandFdisk parsea el comando fdisk y devuelve una instancia de FDISK
-func CommandFdisk(tokens []string) (*FDISK, error) {
+func ParserFdisk(tokens []string) (*FDISK, error) {
 	cmd := &FDISK{} // Crea una nueva instancia de FDISK
 
 	// Unir tokens en una sola cadena y luego dividir por espacios, respetando las comillas
@@ -123,6 +124,7 @@ func CommandFdisk(tokens []string) (*FDISK, error) {
 		cmd.typ = "P"
 	}
 
+	/* ---------- Ejemplo para ver MBR y Particiones ----------*/
 	// Crear una instancia de MBR
 	var mbr structures.MBR
 
@@ -135,8 +137,23 @@ func CommandFdisk(tokens []string) (*FDISK, error) {
 
 	// Imprimir la estructura
 	mbr.Print()
+	fmt.Println("-----------------------------")
+	// Imprimir las particiones
+	mbr.PrintPartitions()
 
-	// Imprimir la estructura deserializada
-	fmt.Printf("MBR deserializado: %+v\n", mbr)
 	return cmd, nil // Devuelve el comando FDISK creado
+}
+
+func commandFdisk(fdisk *FDISK) error {
+	// Convertir el tamaño a bytes
+	_, err := utils.ConvertToBytes(fdisk.size, fdisk.unit)
+	if err != nil {
+		fmt.Println("Error converting size:", err)
+		return err
+	}
+
+	/*
+		PRÓXIMAMENTE.........................................
+	*/
+	return nil
 }

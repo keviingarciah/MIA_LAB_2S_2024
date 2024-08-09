@@ -22,7 +22,7 @@ type MOUNT struct {
 */
 
 // CommandMount parsea el comando mount y devuelve una instancia de MOUNT
-func CommandMount(tokens []string) (*MOUNT, error) {
+func ParserMount(tokens []string) (*MOUNT, error) {
 	cmd := &MOUNT{} // Crea una nueva instancia de MOUNT
 
 	// Unir tokens en una sola cadena y luego dividir por espacios, respetando las comillas
@@ -74,5 +74,8 @@ func CommandMount(tokens []string) (*MOUNT, error) {
 		return nil, errors.New("faltan parámetros requeridos: -name")
 	}
 
+	/*
+		PRÓXIMAMENTE
+	*/
 	return cmd, nil // Devuelve el comando MOUNT creado
 }

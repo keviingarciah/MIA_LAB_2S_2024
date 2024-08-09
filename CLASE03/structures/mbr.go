@@ -1,25 +1,23 @@
 package structures
 
 import (
-	"bytes"
-	"encoding/binary"
-	"fmt"
-	"os"
-	"time"
+	"bytes"           // Paquete para manipulación de buffers
+	"encoding/binary" // Paquete para codificación y decodificación de datos binarios
+	"fmt"             // Paquete para formateo de E/S
+	"os"              // Paquete para funciones del sistema operativo
+	"time"            // Paquete para manipulación de tiempo
 )
 
 type MBR struct {
-	Mbr_size           int32   // Tamaño del MBR en bytes
-	Mbr_creation_date  float32 // Fecha y hora de creación del MBR
-	Mbr_disk_signature int32   // Firma del disco
-	Mbr_disk_fit       [1]byte // Tipo de ajuste
-	///mbr_partitions     [4]Partition // Particiones del MBR
+	Mbr_size           int32        // Tamaño del MBR en bytes
+	Mbr_creation_date  float32      // Fecha y hora de creación del MBR
+	Mbr_disk_signature int32        // Firma del disco
+	Mbr_disk_fit       [1]byte      // Tipo de ajuste
+	Mbr_partitions     [4]PARTITION // Particiones del MBR
 }
 
 // SerializeMBR escribe la estructura MBR al inicio de un archivo binario
 func (mbr *MBR) SerializeMBR(path string) error {
-	fmt.Println(mbr)
-
 	file, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE, 0644)
 	if err != nil {
 		return err
@@ -77,4 +75,26 @@ func (mbr *MBR) Print() {
 	fmt.Printf("Creation Date: %s\n", creationTime.Format(time.RFC3339))
 	fmt.Printf("Disk Signature: %d\n", mbr.Mbr_disk_signature)
 	fmt.Printf("Disk Fit: %c\n", diskFit)
+}
+
+func (mbr *MBR) PrintPartitions() {
+	for i, partition := range mbr.Mbr_partitions {
+		// Convertir Part_status, Part_type y Part_fit a char
+		partStatus := rune(partition.Part_status[0])
+		partType := rune(partition.Part_type[0])
+		partFit := rune(partition.Part_fit[0])
+
+		// Convertir Part_name a string
+		partName := string(partition.Part_name[:])
+
+		fmt.Printf("Partition %d:\n", i+1)
+		fmt.Printf("  Status: %c\n", partStatus)
+		fmt.Printf("  Type: %c\n", partType)
+		fmt.Printf("  Fit: %c\n", partFit)
+		fmt.Printf("  Start: %d\n", partition.Part_start)
+		fmt.Printf("  Size: %d\n", partition.Part_size)
+		fmt.Printf("  Name: %s\n", partName)
+		fmt.Printf("  Correlative: %d\n", partition.Part_correlative)
+		fmt.Printf("  ID: %d\n", partition.Part_id)
+	}
 }

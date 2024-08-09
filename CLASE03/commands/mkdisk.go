@@ -122,11 +122,27 @@ func commandMkdisk(mkdisk *MKDISK) error {
 		fmt.Println("Error converting size:", err)
 		return err
 	}
-	// Convertir el tamaño a int32
-	sizeInt32 := int32(sizeBytes)
 
+	// Crear el disco con el tamaño proporcionado
+	err = createDisk(mkdisk, sizeBytes)
+	if err != nil {
+		fmt.Println("Error creating disk:", err)
+		return err
+	}
+
+	// Crear el MBR con el tamaño proporcionado
+	err = createMBR(mkdisk, sizeBytes)
+	if err != nil {
+		fmt.Println("Error creating MBR:", err)
+		return err
+	}
+
+	return nil
+}
+
+func createDisk(mkdisk *MKDISK, sizeBytes int) error {
 	// Crear las carpetas necesarias
-	err = os.MkdirAll(filepath.Dir(mkdisk.path), os.ModePerm)
+	err := os.MkdirAll(filepath.Dir(mkdisk.path), os.ModePerm)
 	if err != nil {
 		fmt.Println("Error creating directories:", err)
 		return err
@@ -152,7 +168,10 @@ func commandMkdisk(mkdisk *MKDISK) error {
 		}
 		sizeBytes -= writeSize // Resta el tamaño escrito del tamaño total
 	}
+	return nil
+}
 
+func createMBR(mkdisk *MKDISK, sizeBytes int) error {
 	// Seleccionar el tipo de ajuste
 	var fitByte byte
 	switch mkdisk.fit {
@@ -169,14 +188,20 @@ func commandMkdisk(mkdisk *MKDISK) error {
 
 	// Crear el MBR con los valores proporcionados
 	mbr := &structures.MBR{
-		Mbr_size:           sizeInt32,
+		Mbr_size:           int32(sizeBytes),
 		Mbr_creation_date:  float32(time.Now().Unix()),
 		Mbr_disk_signature: rand.Int31(),
 		Mbr_disk_fit:       [1]byte{fitByte},
+		Mbr_partitions: [4]structures.PARTITION{
+			{Part_status: [1]byte{'N'}, Part_type: [1]byte{'N'}, Part_fit: [1]byte{'N'}, Part_start: -1, Part_size: -1, Part_name: [16]byte{'P'}, Part_correlative: 1, Part_id: -1},
+			{Part_status: [1]byte{'N'}, Part_type: [1]byte{'N'}, Part_fit: [1]byte{'N'}, Part_start: -1, Part_size: -1, Part_name: [16]byte{'P'}, Part_correlative: 2, Part_id: -1},
+			{Part_status: [1]byte{'N'}, Part_type: [1]byte{'N'}, Part_fit: [1]byte{'N'}, Part_start: -1, Part_size: -1, Part_name: [16]byte{'P'}, Part_correlative: 3, Part_id: -1},
+			{Part_status: [1]byte{'N'}, Part_type: [1]byte{'N'}, Part_fit: [1]byte{'N'}, Part_start: -1, Part_size: -1, Part_name: [16]byte{'N'}, Part_correlative: 4, Part_id: -1},
+		},
 	}
 
 	// Serializar el MBR en el archivo
-	err = mbr.SerializeMBR(mkdisk.path)
+	err := mbr.SerializeMBR(mkdisk.path)
 	if err != nil {
 		fmt.Println("Error:", err)
 	}
