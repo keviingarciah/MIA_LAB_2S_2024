@@ -13,6 +13,15 @@ type PARTITION struct {
 	Part_id          [4]byte  // ID de la partición
 }
 
+/*
+Part Status:
+	9: Disponible
+	0: Creado
+	1: Montado
+
+Esto queda a su criterio.
+*/
+
 // Crear una partición con los parámetros proporcionados
 func (p *PARTITION) CreatePartition(partStart, partSize int, partType, partFit, partName string) {
 	// Asignar status de la partición
