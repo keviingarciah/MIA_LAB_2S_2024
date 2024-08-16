@@ -1,4 +1,4 @@
-# Clase 4
+# Clase 🤫
 
 Explicación del comando _fdisk_ y _mount_. Explicación de como poder sobreescribir estructuras en un archivo binario (modificar ciertos parámetros y volverlo a guardar).
 
