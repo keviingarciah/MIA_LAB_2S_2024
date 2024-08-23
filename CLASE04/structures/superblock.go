@@ -120,7 +120,7 @@ func (sb *SuperBlock) CreateUsersFile(path string) error {
 	// Actualizar el superbloque
 	sb.S_inodes_count++
 	sb.S_free_inodes_count--
-	sb.S_first_ino += int32(binary.Size(Inode{}))
+	sb.S_first_ino += sb.S_inode_size
 
 	// Creamos el bloque del Inodo Raíz
 	rootBlock := &FolderBlock{
@@ -147,7 +147,7 @@ func (sb *SuperBlock) CreateUsersFile(path string) error {
 	// Actualizar el superbloque
 	sb.S_blocks_count++
 	sb.S_free_blocks_count--
-	sb.S_first_blo += int32(binary.Size(FolderBlock{}))
+	sb.S_first_blo += sb.S_block_size
 
 	// Verificar el inodo raíz
 	fmt.Println("\nInodo Raíz:")
@@ -218,7 +218,7 @@ func (sb *SuperBlock) CreateUsersFile(path string) error {
 	// Actualizamos el superbloque
 	sb.S_inodes_count++
 	sb.S_free_inodes_count--
-	sb.S_first_ino += int32(binary.Size(Inode{}))
+	sb.S_first_ino += sb.S_inode_size
 
 	// Creamos el bloque de users.txt
 	usersBlock := &FileBlock{
@@ -242,7 +242,7 @@ func (sb *SuperBlock) CreateUsersFile(path string) error {
 	// Actualizamos el superbloque
 	sb.S_blocks_count++
 	sb.S_free_blocks_count--
-	sb.S_first_blo += int32(binary.Size(FileBlock{}))
+	sb.S_first_blo += sb.S_block_size
 
 	// Verificar el inodo raíz
 	fmt.Println("\nInodo Raíz Actualizado:")
@@ -297,7 +297,7 @@ func (sb *SuperBlock) PrintInodes(path string) error {
 	for i := int32(0); i < sb.S_inodes_count; i++ {
 		inode := &Inode{}
 		// Deserializar el inodo
-		err := inode.Deserialize(path, int64(sb.S_inode_start+(i*int32(binary.Size(Inode{})))))
+		err := inode.Deserialize(path, int64(sb.S_inode_start+(i*sb.S_inode_size)))
 		if err != nil {
 			return err
 		}
@@ -317,7 +317,7 @@ func (sb *SuperBlock) PrintBlocks(path string) error {
 	for i := int32(0); i < sb.S_inodes_count; i++ {
 		inode := &Inode{}
 		// Deserializar el inodo
-		err := inode.Deserialize(path, int64(sb.S_inode_start+(i*int32(binary.Size(Inode{})))))
+		err := inode.Deserialize(path, int64(sb.S_inode_start+(i*sb.S_inode_size)))
 		if err != nil {
 			return err
 		}
@@ -331,7 +331,7 @@ func (sb *SuperBlock) PrintBlocks(path string) error {
 			if inode.I_type[0] == '0' {
 				block := &FolderBlock{}
 				// Deserializar el bloque
-				err := block.Deserialize(path, int64(sb.S_block_start+(blockIndex*64))) // 64 porque es el tamaño de un bloque
+				err := block.Deserialize(path, int64(sb.S_block_start+(blockIndex*sb.S_block_size))) // 64 porque es el tamaño de un bloque
 				if err != nil {
 					return err
 				}
@@ -344,7 +344,7 @@ func (sb *SuperBlock) PrintBlocks(path string) error {
 			} else if inode.I_type[0] == '1' {
 				block := &FileBlock{}
 				// Deserializar el bloque
-				err := block.Deserialize(path, int64(sb.S_block_start+(blockIndex*64))) // 64 porque es el tamaño de un bloque
+				err := block.Deserialize(path, int64(sb.S_block_start+(blockIndex*sb.S_block_size))) // 64 porque es el tamaño de un bloque
 				if err != nil {
 					return err
 				}
