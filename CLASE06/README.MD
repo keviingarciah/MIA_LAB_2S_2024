@@ -22,6 +22,8 @@ bun dev
 
 Para más información sobre ViteJS pueden visitar su [página oficial](https://vitejs.dev/guide/).
 
+### Tailwindcss
+
 También en mi caso utilicé tailwindcss para los estilos. Para instalar tailwindcss se hizo lo siguiente:
 
 ```bash
