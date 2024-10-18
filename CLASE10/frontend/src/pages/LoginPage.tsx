@@ -29,7 +29,7 @@ const Login: React.FC = () => {
     console.log("Partition ID:", partitionId);
     console.log("Username:", username);
     console.log("Password:", password);
-
+    alert("¡Usuario logueado exitosamente!"); // Mostrar alerta
     handleLogin();
   };
 

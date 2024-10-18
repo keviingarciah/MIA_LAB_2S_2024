@@ -9,6 +9,7 @@ function Navbar() {
 
   const handleLogout = () => {
     logout();
+    alert("¡Usuario deslogueado exitosamente!"); // Mostrar alerta
     navigate("/login");
   };
 
@@ -28,12 +29,12 @@ function Navbar() {
               Terminal
             </NavLink>
           )}
-          {isLoggedIn && location.pathname !== "/file-explorer" && (
+          {isLoggedIn && location.pathname == "/" && (
             <NavLink
-              to="/file-explorer"
+              to="/disks"
               className="ml-auto text-white text-xl font-semibold hover:bg-green-700 px-4 py-4 rounded transition duration-300 ease-in-out"
             >
-              Explorador
+              Explorador de Archivos
             </NavLink>
           )}
           {!isLoggedIn && location.pathname !== "/login" && (
